@@ -2,7 +2,7 @@
 # sudo chmod +x *.sh
 # ./launch-stack.sh
 
-AWS_REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/\(.*\)[a-z]/\1/')
+AWS_REGION="us-east-1"
 
 MYNAME=${1:-pmd}
 PROJECTNAME=${2:-cloudproviders}

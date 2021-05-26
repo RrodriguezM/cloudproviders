@@ -11,8 +11,8 @@ phases:
       - npm install aws-cli-js
       - >-
         aws cloudformation package --template webapp/template.yml --s3-bucket $S3_BUCKET
-        --output-template template-export-get.json
+        --output-template template-export-get.yml
 artifacts:
   type: zip
   files:
-    - template-export-get.json
+    - template-export-get.yml
