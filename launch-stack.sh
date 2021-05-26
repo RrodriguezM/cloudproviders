@@ -16,7 +16,7 @@ OTHER=${8:-iam-branch}
 sudo rm -rf $TMPDIR
 mkdir $TMPDIR
 cd $TMPDIR
-git clone https://github.com/PaulDuvall/cloudproviders.git
+git clone https://github.com/RrodriguezM/cloudproviders.git
 
 
 aws s3api list-buckets --query 'Buckets[?starts_with(Name, `'$OTHER'`) == `true`].[Name]' --output text | xargs -I {} aws s3 rb s3://{} --force
