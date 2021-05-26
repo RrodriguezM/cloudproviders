@@ -5,6 +5,7 @@ phases:
       nodejs: 10
     commands:
       - node --version
+      - echo "RAFAEL"
   build:
     commands:
       - npm install
