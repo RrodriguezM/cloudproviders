@@ -50,7 +50,7 @@ mkdir zipfiles
 cp $PIPELINEYAML zipfiles
 mv $S3BUCKET.zip zipfiles
 cd zipfiles
-
+echo "RR"
 aws s3 sync . s3://$S3BUCKET-$(aws sts get-caller-identity --output text --query 'Account')
 
 aws cloudformation create-stack --stack-name $CFNSTACK --capabilities CAPABILITY_NAMED_IAM --disable-rollback --template-body file://$PIPELINEYAML --parameters ParameterKey=PipelineBucket,ParameterValue=$S3BUCKET-$(aws sts get-caller-identity --output text --query 'Account')
