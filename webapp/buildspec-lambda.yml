@@ -13,7 +13,19 @@ phases:
       - >-
         aws cloudformation package --template webapp/template.yml --s3-bucket $S3_BUCKET
         --output-template template-export-get.yml
+      - >-
+        aws cloudformation package --template webapp/template.yml --s3-bucket $S3_BUCKET
+        --output-template template-test.yml
+      - >-
+        aws cloudformation package --template webapp/template.yml --s3-bucket $S3_BUCKET
+        --output-template template-stage.yml
+      - >-
+        aws cloudformation package --template webapp/template.yml --s3-bucket $S3_BUCKET
+        --output-template template-prod.yml
 artifacts:
   type: zip
   files:
     - template-export-get.yml
+    - template-test.yml
+    - template-stage.yml
+    - template-prod.yml
