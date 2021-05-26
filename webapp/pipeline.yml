@@ -460,7 +460,7 @@ Resources:
               - Arn
             Capabilities: CAPABILITY_IAM
             StackName: !Sub ${AWS::StackName}-${AWS::Region}
-            TemplatePath: Lambda-Get-Artifact::template-export-get.yml
+            TemplatePath: Lambda-Get-Artifact::template-test.yml
           RunOrder: 1
         - ActionTypeId:
             Category: Deploy
