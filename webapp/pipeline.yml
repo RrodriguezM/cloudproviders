@@ -394,52 +394,51 @@ Resources:
     Properties:
       RoleArn: !GetAtt CodePipelineRole.Arn
       Stages:
-      - Name: Source
+      - Name: Source # this is the name that will show up in the AWS console, so consider this the user-friendly name
         Actions:
-        - InputArtifacts: []
-          Name: Source
+        - Name: Get-sources # this is the name used to reference a step by. Consider this the developer-friendly name
           ActionTypeId:
             Category: Source
-            Owner: ThirdParty
-            Version: '1'
-            Provider: GitHub
-          OutputArtifacts:
-          - Name: MyApp
-          Configuration:
-            Owner: !Ref GitHubUser
-            Repo: !Ref GitHubRepo
-            Branch: !Ref GitHubBranch
-            OAuthToken: !Ref GitHubToken
-          RunOrder: 1
-      - Name: Build
-        Actions:
-        - InputArtifacts:
-          - Name: MyApp
-          Name: PackageSAM
-          ActionTypeId:
-            Category: Build
             Owner: AWS
-            Version: '1'
-            Provider: CodeBuild
+            Provider: S3 #we're using CodeCommit but you can also use other supported repo providers
+            Version: "1"
           OutputArtifacts:
-          - Name: Lambda-Get-Artifact
+            - Name: Lambda-Get-Artifact #the name of the zip file containing our source code. This will be used as InputArtifact by the following stages
           Configuration:
-            ProjectName:
-              Ref: CodeBuildGetDDBFunction
+            S3Bucket: 
+              Fn::Sub: '{{resolve:ssm:/${Environment}/pipeline/s3-bucket-source-name:1}}'
+            S3ObjectKey: artifact-0.0.1.zip
+            PollForSourceChanges: 'true'
           RunOrder: 1
-        - InputArtifacts:
-          - Name: MyApp
-          Name: GenerateDiagrams
-          ActionTypeId:
-            Category: Test
-            Owner: AWS
-            Version: '1'
-            Provider: CodeBuild
-          OutputArtifacts: []
-          Configuration:
-            ProjectName:
-              Ref: CodeBuildDiagrams
-          RunOrder: 1
+      # - Name: Build
+      #   Actions:
+      #   - InputArtifacts:
+      #     - Name: MyApp
+      #     Name: PackageSAM
+      #     ActionTypeId:
+      #       Category: Build
+      #       Owner: AWS
+      #       Version: '1'
+      #       Provider: CodeBuild
+      #     OutputArtifacts:
+      #     - Name: Lambda-Get-Artifact
+      #     Configuration:
+      #       ProjectName:
+      #         Ref: CodeBuildGetDDBFunction
+      #     RunOrder: 1
+        # - InputArtifacts:
+        #   - Name: MyApp
+        #   Name: GenerateDiagrams
+        #   ActionTypeId:
+        #     Category: Test
+        #     Owner: AWS
+        #     Version: '1'
+        #     Provider: CodeBuild
+        #   OutputArtifacts: []
+        #   Configuration:
+        #     ProjectName:
+        #       Ref: CodeBuildDiagrams
+        #   RunOrder: 1
       - Name: Deploy
         Actions:
         - InputArtifacts:
@@ -460,7 +459,7 @@ Resources:
               - Arn
             Capabilities: CAPABILITY_IAM
             StackName: !Sub ${AWS::StackName}-${AWS::Region}
-            TemplatePath: Lambda-Get-Artifact::template-test.yml
+            TemplatePath: Lambda-Get-Artifact::template-export-get.yml
           RunOrder: 1
         - ActionTypeId:
             Category: Deploy
