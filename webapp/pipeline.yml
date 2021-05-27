@@ -445,7 +445,50 @@ Resources:
         #     ProjectName:
         #       Ref: CodeBuildDiagrams
         #   RunOrder: 1
-      - Name: Deploy
+      - Name: DeployPlayground
+        Actions:
+        - InputArtifacts:
+          - Name: Lambda-Get-Artifact
+          Name: GenerateChangeSet
+          ActionTypeId:
+            Category: Deploy
+            Owner: AWS
+            Version: '1'
+            Provider: CloudFormation
+          OutputArtifacts: []
+          Configuration:
+            ActionMode: CHANGE_SET_REPLACE
+            ChangeSetName: pipeline-changeset
+            RoleArn:
+              Fn::GetAtt:
+              - CloudFormationTrustRole
+              - Arn
+            Capabilities: CAPABILITY_IAM
+            StackName: !Sub ${AWS::StackName}-${AWS::Region}
+            TemplatePath: Lambda-Get-Artifact::template-export-get.yml
+          RunOrder: 1
+        - ActionTypeId:
+            Category: Deploy
+            Owner: AWS
+            Provider: CloudFormation
+            Version: "1"
+          Configuration:
+            ActionMode: CHANGE_SET_EXECUTE
+            ChangeSetName: pipeline-changeset
+            StackName: !Sub ${AWS::StackName}-${AWS::Region}
+          InputArtifacts: []
+          Name: ExecuteChangeSet
+          OutputArtifacts: []
+          RunOrder: 2
+      - Name: Promote
+        Actions:
+          - Name: Promote-staging-to-production #Built-in step that adds a manual approval step
+            ActionTypeId:
+              Category: Approval
+              Owner: AWS
+              Provider: Manual
+              Version: "1"
+      - Name: DeployTest
         Actions:
         - InputArtifacts:
           - Name: Lambda-Get-Artifact
