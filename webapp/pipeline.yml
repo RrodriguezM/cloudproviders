@@ -184,7 +184,8 @@ Resources:
             - apigateway:Put*
             - apigateway:Post*
             - apigateway:TagResource
-            - apigateway:Patch* 
+            - apigateway:Patch*
+            - apigateway:Get*  
             Effect: Allow
             Resource: "*"
           - Action:
