@@ -1,0 +1,9 @@
+
+https://aws.amazon.com/premiumsupport/knowledge-center/codepipeline-deploy-cloudformation/
+https://stelligent.com/2020/06/25/continuous-deployment-for-serverless-applications-on-aws/
+
+Get Pipeline json:
+aws codepipeline get-pipeline --name cloudproviders-pmd-Pipeline-SOL4CO3046HP >pipeline.json
+
+Update the Pipeline: 
+aws codepipeline update-pipeline --cli-input-json file://pipeline.json

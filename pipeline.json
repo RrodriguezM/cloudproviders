@@ -1,0 +1,156 @@
+{
+    "pipeline": {
+        "name": "cloudproviders-pmd-Pipeline-SOL4CO3046HP",
+        "roleArn": "arn:aws:iam::454492840024:role/cloudproviders-pmd-CodePipelineRole-1FGD6AC2ILGQC",
+        "artifactStore": {
+            "type": "S3",
+            "location": "cloudproviders-pmd-454492840024",
+            "encryptionKey": {
+                "id": "arn:aws:kms:us-east-1:454492840024:key/75e431c1-e8e7-4e2b-9369-443c52870251",
+                "type": "KMS"
+            }
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Get-sources",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "S3",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "PollForSourceChanges": "true",
+                            "S3Bucket": "historical-api-source-bucket-playground",
+                            "S3ObjectKey": "artifact-0.0.1.zip"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "Lambda-Get-Artifact"
+                            }
+                        ],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "DeployPlayground",
+                "actions": [
+                    {
+                        "name": "GenerateChangeSet",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_REPLACE",
+                            "Capabilities": "CAPABILITY_IAM",
+                            "ChangeSetName": "pipeline-changeset",
+                            "RoleArn": "arn:aws:iam::454492840024:role/cloudproviders-pmd-CloudFormationTrustRole-80F3DPVD2YJH",
+                            "StackName": "cloudproviders-pmd-us-east-1",
+                            "TemplatePath": "Lambda-Get-Artifact::template-export-get.yml"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "Lambda-Get-Artifact"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "ExecuteChangeSet",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 2,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_EXECUTE",
+                            "ChangeSetName": "pipeline-changeset",
+                            "StackName": "cloudproviders-pmd-us-east-1"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "Promote",
+                "actions": [
+                    {
+                        "name": "Promote-staging-to-production",
+                        "actionTypeId": {
+                            "category": "Approval",
+                            "owner": "AWS",
+                            "provider": "Manual",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {},
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "DeployTest",
+                "actions": [
+                    {
+                        "name": "GenerateChangeSet",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_REPLACE",
+                            "Capabilities": "CAPABILITY_IAM",
+                            "ChangeSetName": "pipeline-changeset",
+                            "RoleArn": "arn:aws:iam::262352703371:role/CFRolePipeline",
+                            "StackName": "cloudproviders-pmd-us-east-1",
+                            "TemplatePath": "Lambda-Get-Artifact::template-export-get.yml"
+                        },
+                        "outputArtifacts": [],
+                        "roleArn": "arn:aws:iam::262352703371:role/PipelineRoleCrossAcc",
+                        "inputArtifacts": [
+                            {
+                                "name": "Lambda-Get-Artifact"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "ExecuteChangeSet",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 2,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_EXECUTE",
+                            "ChangeSetName": "pipeline-changeset",
+                            "RoleArn": "arn:aws:iam::262352703371:role/CFRolePipeline",
+                            "StackName": "cloudproviders-pmd-us-east-1"
+                        },
+                        "outputArtifacts": [],
+                        "roleArn": "arn:aws:iam::262352703371:role/PipelineRoleCrossAcc",
+                        "inputArtifacts": []
+                    }
+                ]
+            }
+        ],
+        "version": 2
+    }
+}
