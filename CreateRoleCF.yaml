@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Description: AWS SAM template to deploy role
+
+Parameters:
+  Environment:
+    Type: String
+    Description: Name of the environment in which the application will be deployed
+    Default: playground
+  AppName:
+    Type: String
+    Description: Name of the application
+    Default: CICD
+  S3arn:
+    Type: String
+    Description: ARN of the S3 bucket artifact
+    Default: arn:aws:s3:::cloudproviders-pmd-454492840024
+  PipelineArtifactKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Description: 'The arn of the KMS Key used to encrypt artifacts for cross-account use'
+
+Resources:
+  PipelineRoleCF:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${Environment}-pipeline-cloud-formation'
+      Path: '/'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudformation.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CFRolePipeline
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: "*"
+                Resource: "*"

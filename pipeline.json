@@ -12,7 +12,7 @@
         },
         "stages": [
             {
-                "name": "Sources",
+                "name": "Source",
                 "actions": [
                     {
                         "name": "Get-sources",
@@ -117,12 +117,12 @@
                             "ActionMode": "CHANGE_SET_REPLACE",
                             "Capabilities": "CAPABILITY_IAM",
                             "ChangeSetName": "pipeline-changeset",
-                            "RoleArn": "arn:aws:iam::262352703371:role/CFRolePipeline",
+                            "RoleArn": "arn:aws:iam::262352703371:role/playground-pipeline-cloud-formation",
                             "StackName": "cloudproviders-pmd-us-east-1",
                             "TemplatePath": "Lambda-Get-Artifact::template-export-get.yml"
                         },
                         "outputArtifacts": [],
-                        "roleArn": "arn:aws:iam::262352703371:role/PipelineRoleCrossAcc",
+                        "roleArn": "arn:aws:iam::262352703371:role/playground-pipeline-cross-account",
                         "inputArtifacts": [
                             {
                                 "name": "Lambda-Get-Artifact"
@@ -141,11 +141,11 @@
                         "configuration": {
                             "ActionMode": "CHANGE_SET_EXECUTE",
                             "ChangeSetName": "pipeline-changeset",
-                            "RoleArn": "arn:aws:iam::262352703371:role/CFRolePipeline",
+                            "RoleArn": "arn:aws:iam::262352703371:role/playground-pipeline-cloud-formation",
                             "StackName": "cloudproviders-pmd-us-east-1"
                         },
                         "outputArtifacts": [],
-                        "roleArn": "arn:aws:iam::262352703371:role/PipelineRoleCrossAcc",
+                        "roleArn": "arn:aws:iam::262352703371:role/playground-pipeline-cross-account",
                         "inputArtifacts": []
                     }
                 ]

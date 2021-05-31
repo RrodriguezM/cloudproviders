@@ -1,0 +1,12 @@
+{
+    "Environment": "playground",
+    "AppName": "pipeline-cicd",
+    "SSLCert": "arn:aws:acm:us-east-1:206013971730:certificate/0a441b54-cfe4-4423-8fb2-d1d6806aa636",
+    "ApiCname": "playground-h-api.blackline-dev.com",
+    "Tenant": "historical/v0",
+    "ServiceToken": "arn:aws:sns:us-east-1:637721982960:RequestRoute53CNAME",
+    "DataTestRole": "arn:aws:iam::643057490660:role/HistoricalApiUser",
+    "DataTestDynamoDB": "arn:aws:dynamodb:us-east-1:643057490660:table/bl_hapi_file_index_store",
+    "DataTestBucket": "arn:aws:s3:::blackline-data-dev-us-east-1-reconciled-zone",
+    "PipelineArtifactKey": "PipelineArtifactKey"
+}
