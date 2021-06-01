@@ -4,7 +4,7 @@ set -ue
 
 Environment=${1-playground}
 Region=${2-us-east-1}
-ConfigFile="./params/parameters-${Environment}.json"
+ConfigFile="../params/parameters-${Environment}.json"
 
 get_template_value() {
   cat ${ConfigFile} | jq -r .$1
@@ -19,6 +19,7 @@ cd "$script_path"
 prefix="role-pipeline-cf"
 parameters=$(get_parameters)
 
+cd ../cfn-templates
 echo "Deploying role for cloud formation"
 template_name="CreateRoleCF.yaml"
 
